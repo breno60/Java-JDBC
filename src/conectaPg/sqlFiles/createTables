@@ -1,0 +1,25 @@
+CREATE TABLE Computador (
+CodComputador INTEGER  ,
+Descricao VARCHAR(50),
+Qtd INT,
+primary key (CodComputador )
+);
+
+CREATE TABLE Vendedor (
+Matricula INTEGER ,
+Nome VARCHAR(50),
+primary key (Matricula )
+);
+
+
+CREATE TABLE Venda (
+idVenda INTEGER,
+qtdVendida int,
+CodComp int,
+MatVend int,
+primary key (idVenda),
+
+
+FOREIGN KEY (MatVend)  REFERENCES Vendedor(Matricula),
+FOREIGN KEY (CodComp) REFERENCES Computador(codcomputador)
+);

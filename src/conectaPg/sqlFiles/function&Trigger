@@ -1,0 +1,28 @@
+CREATE FUNCTION subtraiEstoque()
+RETURNS TRIGGER AS $$
+DECLARE
+    estoqueComputador INT;
+BEGIN
+    SELECT c.qtd
+    INTO estoqueComputador
+    FROM computador c
+    WHERE c.codComputador = new.codComp;
+
+    IF new.qtdVendida <= estoqueComputador THEN
+        UPDATE computador c
+        SET qtd = qtd - new.qtdVendida
+        WHERE codcomputador = new.codComp;
+        raise notice 'Venda concluida com sucesso!';
+
+        RETURN new;
+    ELSE
+        raise notice 'A venda não pode ser realizada pois não possuimos estoque!';
+        RETURN old;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trgAtualizaEstoque
+BEFORE INSERT ON venda
+FOR EACH ROW
+EXECUTE PROCEDURE subtraiEstoque();
